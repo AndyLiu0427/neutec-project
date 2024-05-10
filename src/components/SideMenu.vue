@@ -23,9 +23,3 @@ const props = defineProps({
   }
 })
 </script>
-
-<style scoped>
-.side-menu {
-  width: 200px;
-}
-</style>

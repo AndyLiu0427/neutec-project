@@ -8,14 +8,14 @@
     />
   </nav>
   <div class="main">
-    <!-- <animation /> -->
+    <Game />
   </div>
 </template>
 
 <script setup>
 import { onMounted, onUnmounted, ref } from 'vue'
 import SideMenu from './SideMenu.vue'
-import Animation from './Animation.vue'
+import Game from './Game.vue'
 
 const showSideMenu = ref(false)
 const sideMenuRef = ref(null);
