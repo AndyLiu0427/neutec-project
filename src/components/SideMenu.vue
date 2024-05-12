@@ -1,25 +1,46 @@
 <template>
   <div class="sidebar">
     <ul class="list-items">
-      <li v-for="item in data" :key="item.key">
-        {{ item.text }}
-        <!-- <ul v-if="item.children">
-          <li v-for="child in item.children" :key="child.key">
-            {{ child.text }}
-          </li>
-        </ul> -->
-      </li>
+      <SideMenuItem
+        v-for="item in data"
+        :key="item.key"
+        :item="item"
+        @update-active="updateActive"
+        @toggle-menu="toggleMenu"
+      />
     </ul>
   </div>
 </template>
 
-<script setup>
-import { defineProps } from 'vue'
+<script>
+import SideMenuItem from './SideMenuItem.vue';
 
-const props = defineProps({
-  data: {
-    type: Array,
-    required: true
+export default {
+  props: {
+    data: {
+      type: Array,
+      required: true
+    }
+  },
+  components: {
+    SideMenuItem
+  },
+  methods: {
+    updateActive(activeItem) {
+      this.data.forEach(item => {
+        if (item !== activeItem) {
+          item.active = false;
+        }
+      });
+      activeItem.active = true;
+    },
+    toggleMenu(activeItem) {
+      this.data.forEach(item => {
+        if (item !== activeItem && item.children) {
+          item.expanded = false;
+        }
+      });
+    }
   }
-})
+};
 </script>

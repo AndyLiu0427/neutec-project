@@ -59,7 +59,8 @@ nav {
 .sidebar .list-items li {
   padding-left: 20px;
   line-height: 50px;
-  transition: all 0.3s ease;
+  list-style-type: none;
+  cursor: pointer;
 }
 
 .main {
