@@ -10,7 +10,9 @@
         :style="`${cell.show ? 'opacity: 1' : 'opacity: 0'};`"
         class="ball-block"
       >
-        <div class="ball">0</div>
+        <div>
+          <div class="ball">0</div>
+        </div>
       </div>
     </div>
   </div>

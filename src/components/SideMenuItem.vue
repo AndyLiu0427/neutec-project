@@ -1,12 +1,11 @@
 <template>
-  <li :class="`${ item.active ? 'active' : '' }`" @click="toggleMenu">
+  <li :class="`${item.active ? 'active' : ''}`" @click="toggleMenu">
     <span>{{ item.text }}</span>
     <ul v-show="item.children && item.expanded">
-      <side-menu-item
+      <SideMenuItem
         v-for="child in item.children"
-        :item="child"
         :key="child.key"
-        :class="`${ item.children.active ? 'active' : '' }`"
+        :item="child"
         @update-active="handleUpdateActive"
         @toggle-menu="handleToggleMenu"
       />
@@ -14,66 +13,69 @@
   </li>
 </template>
 
-<script>
-export default {
-  props: {
-    item: {
-      type: Object,
-      required: true
-    }
-  },
-  methods: {
-    toggleMenu() {
-      if (this.item.children) {
-        this.item.expanded = !this.item.expanded;
-        if (!this.item.expanded) {
-          this.item.active = false;
-        }
-      }
-      this.$emit('update-active', this.item);
-      this.$emit('toggle-menu', this.item);
-    },
-    handleUpdateActive(clickedItem) {
-      this.item.active = (this.item === clickedItem) ? true : false;
-      if (this.item.children) {
-        this.item.children.forEach(child => {
-          if (child !== clickedItem) {
-            child.active = false;
-            if (child.children) {
-              child.children.forEach(c => {
-                c.active = false;
-              });
-            }
-          } else {
-            child.active = true;
-          }
-        });
-      }
-      this.$emit('update-active', this.item);
-    },
-    handleToggleMenu(clickedItem) {
-      if (this.item === clickedItem) {
-        this.item.expanded = !this.item.expanded;
-      } else {
-        this.item.expanded = false;
-      }
-      this.item.children.forEach(child => {
-        if (child !== clickedItem) {
-          child.expanded = false;
-        } else {
-          child.expanded = true;
-        }
-      });
+<script setup>
+import { ref, defineProps } from 'vue';
+const emit = defineEmits(['update-active', 'toggle-menu', 'update-active'])
+const props = defineProps({
+  item: {
+    type: Object,
+    required: true
+  }
+});
+
+
+const toggleMenu = () => {
+  if (props.item.children) {
+    props.item.expanded = !props.item.expanded;
+    if (!props.item.expanded) {
+      props.item.active = false;
     }
   }
+  emit('update-active', props.item);
+  emit('toggle-menu', props.item);
+};
+
+const handleUpdateActive = (clickedItem) => {
+  props.item.active = props.item === clickedItem;
+  if (props.item.children) {
+    props.item.children.forEach(child => {
+      if (child !== clickedItem) {
+        child.active = false;
+        if (child.children) {
+          child.children.forEach(c => {
+            c.active = false;
+          });
+        }
+      } else {
+        child.active = true;
+      }
+    });
+  }
+  emit('update-active', props.item);
+};
+
+const handleToggleMenu = (clickedItem) => {
+  if (props.item === clickedItem) {
+    props.item.expanded = !props.item.expanded;
+  } else {
+    props.item.expanded = false;
+  }
+  props.item.children.forEach(child => {
+    if (child !== clickedItem) {
+      child.expanded = false;
+    } else {
+      child.expanded = true;
+    }
+  });
 };
 </script>
 
 <style>
-  .active {
-    background: #808080;
-  }
-  .active > span {
-    color: yellow;
-  }
+.active {
+  background: #808080;
+}
+
+.active > span {
+  color: yellow;
+}
 </style>

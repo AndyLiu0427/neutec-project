@@ -1,5 +1,5 @@
 <template>
-  <div class="sidebar">
+  <div class="sidebar" v-if="data && data.length">
     <ul class="list-items">
       <SideMenuItem
         v-for="item in data"
@@ -12,35 +12,57 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import SideMenuItem from './SideMenuItem.vue';
+import { onMounted, ref } from 'vue';
 
-export default {
-  props: {
-    data: {
-      type: Array,
-      required: true
+const data = ref([]);
+
+const fetchData = async () => {
+  try {
+    const response = await fetch('/data.json')
+    if (response.ok) {
+      data.value = await response.json()
+      console.log('Data fetched:', data.value)
+    } else {
+      console.error('Failed to fetch data')
     }
-  },
-  components: {
-    SideMenuItem
-  },
-  methods: {
-    updateActive(activeItem) {
-      this.data.forEach(item => {
-        if (item !== activeItem) {
-          item.active = false;
-        }
-      });
-      activeItem.active = true;
-    },
-    toggleMenu(activeItem) {
-      this.data.forEach(item => {
-        if (item !== activeItem && item.children) {
-          item.expanded = false;
-        }
-      });
-    }
+  } catch (error) {
+    console.error('Error fetching data:', error)
   }
-};
+}
+
+onMounted(() => {
+  fetchData()
+})
+
+const updateActive = (activeItem) => {
+  if (data.value) {
+    data.value.forEach(item => {
+      if (item !== activeItem) {
+        item.active = false;
+      }
+    });
+    activeItem.active = true;
+  }
+}
+
+const toggleMenu = (activeItem) => {
+  if (data.value) {
+    data.value.forEach(item => {
+      if (item !== activeItem && item.children) {
+        item.expanded = false;
+      }
+    });
+  }
+}
 </script>
+
+<style>
+  .active {
+    background: #808080;
+  }
+  .active > span {
+    color: yellow;
+  }
+</style>
