@@ -10,4 +10,6 @@ const router = createRouter({
   routes
 })
 
+console.log(process.env.BASE_URL)
+
 export default router
