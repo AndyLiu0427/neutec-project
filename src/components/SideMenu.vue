@@ -20,7 +20,7 @@ const data = ref([]);
 
 const fetchData = async () => {
   try {
-    const response = await fetch('/data.json')
+    const response = await fetch('./data.json')
     if (response.ok) {
       data.value = await response.json()
       console.log('Data fetched:', data.value)
